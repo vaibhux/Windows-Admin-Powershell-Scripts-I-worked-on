@@ -1,0 +1,77 @@
+#In Windows PowerShell, run the following command to display a list of the 10 processes that consume the most working set memory:
+
+Get-Process | Sort-Object -Property WS -Descending | Select-Object -First 10
+
+#Run the following command to return the 10 processes that consume the most working set memory and output the results to a file named D:\LabFiles\Top10Mem.txt:
+
+Get-Process | Sort-Object -Property WS -Descending | Select-Object -First 10 | Out-File -FilePath "D:\LabFiles\Top10Mem.txt"
+
+In Windows PowerShell ISE, create a script named D:\LabFiles\HiMem.ps1 that uses the Get-Process command to display the 10 processes that consume the most working set memory from the Alpha computer.
+
+Open Windows PowerShell as an administrator, and then create a script named D:\LabFiles\HiMem.ps1.
+Windows_PowerShell_ISE
+Get-Process -ComputerName Alpha |  
+Sort-Object -Property WS -Descending |  
+Select-Object -First 10
+
+At the beginning of the script, add the following commands to create the variables $ComputerName, $NumItems and $ReportFile:
+Windows_PowerShell_ISE
+$ComputerName = "Alpha"
+$NumItems = 10
+$ReportFile = "D:\LabFiles\Top10Mem.txt"
+
+Replace the Get-Process command with the following command that uses the $ComputerName and $NumItems variables:
+Windows_PowerShell_ISE
+Get-Process -ComputerName $ComputerName | 
+Sort-Object -Property WS -Descending | 
+Select-Object -First $NumItems
+
+Replace the Get-Process command with the following command:
+Windows_PowerShell_ISE
+$ReportData = Get-Process -ComputerName $ComputerName | 
+Sort-Object -Property WS -Descending | 
+Select-Object -First $NumItems
+
+if ($ReportFile) {
+$ReportData | Out-File -FilePath $ReportFile
+} else {
+Write-Output $ReportData
+}
+
+In the HiMem.ps1 script, replace the first three lines with the following code block to prompt for input into the variables:
+Windows_PowerShell_ISE
+$ComputerName = Read-Host "Enter a Computer Name"
+$NumItems = Read-Host "Enter the number of items to display"
+$ReportFile = Read-Host "Enter the path to the report file"
+
+In Windows PowerShell, run the script, and then when prompted, enter Alpha for the ComputerName variable, 15 for the NumItems variable, and D:\LabFiles\Top15Mem.txt for the ReportFile variable.
+
+
+================Create a parameterized script===============
+
+In the HiMem.ps1 script, change the $ComputerName, $NumItems, and $ReportFile variables into parameters.
+
+ param (
+       [string]$ComputerName,
+       [int]$NumItems,
+       [string]$ReportFile
+  )
+  
+$ComputerName = Read-Host "Enter a Computer Name"
+$NumItems = Read-Host "Enter the number of items to display"
+$ReportFile = Read-Host "Enter the path to the report file"
+  
+$ReportData = Get-Process -ComputerName $ComputerName | 
+Sort-Object -Property WS -Descending | 
+Select-Object -First $NumItems
+  
+if ($ReportFile) {
+$ReportData | Out-File -FilePath $ReportFile
+} else {
+Write-Output $ReportData
+}
+  
+
+Run the HiMem.ps1 script by using Alpha for the ComputerName variable and 10 for the NumItems variable.
+Repeat the previous command and then print the output to a file named D:\LabFiles\Top10MemParameter.txt.
+Run the HiMem.ps1 script using Alpha for the ComputerName variable, 20 for the NumItems variable, and D:\LabFiles\Top20Mem.txt for the ReportFile variable.
